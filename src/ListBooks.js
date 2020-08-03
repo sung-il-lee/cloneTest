@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import BookShelf from './BookShelf';
+import { Link } from 'react-router-dom';
 
 class ListBooks extends Component {
   mapBooksToShelves(books = []) {
@@ -28,21 +29,28 @@ class ListBooks extends Component {
     const { books } = this.props;
     const bookShelvesMap = this.mapBooksToShelves(books);
     return (
-      <div className='list-books'>
-        <div className='list-books-title'>
-          <h1>MyReads</h1>
+      <div>
+        <div className='list-books'>
+          <div className='list-books-title'>
+            <h1>MyReads</h1>
+          </div>
+          <div className='list-books-content'>
+            {Object.keys(bookShelvesMap).map((key, i) => {
+              const bookShelfName = this.extractBookShelfName(key);
+              return (
+                <BookShelf
+                  bookShelfBooks={bookShelvesMap[key]}
+                  bookShelfName={bookShelfName}
+                  key={bookShelfName}
+                />
+              );
+            })}
+          </div>
         </div>
-        <div className='list-books-content'>
-          {Object.keys(bookShelvesMap).map((key, i) => {
-            const bookShelfName = this.extractBookShelfName(key);
-            return (
-              <BookShelf
-                bookShelfBooks={bookShelvesMap[key]}
-                bookShelfName={bookShelfName}
-                key={bookShelfName}
-              />
-            );
-          })}
+        <div className='open-search'>
+          <Link to='/search'>
+            <button>Add a book</button>
+          </Link>
         </div>
       </div>
     );
