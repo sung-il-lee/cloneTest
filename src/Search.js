@@ -9,8 +9,8 @@ class Search extends Component {
     }
   };
   render() {
-    const { books } = this.props;
-    console.log(books);
+    const { searchedBooks } = this.props;
+    console.log(searchedBooks);
     return (
       <div className='search-books'>
         <div className='search-books-bar'>
@@ -27,9 +27,9 @@ class Search extends Component {
         </div>
         <div className='search-books-results'>
           <ol className='books-grid'>
-            {books &&
-              books.length &&
-              books.map((book) => {
+            {searchedBooks &&
+              searchedBooks.length > 0 &&
+              searchedBooks.map((book) => {
                 return <Book book={book} key={book.id} />;
               })}
           </ol>

@@ -8,6 +8,7 @@ import Search from './Search';
 class BooksApp extends React.Component {
   state = {
     books: [],
+    searchedBooks: [],
   };
 
   componentDidMount() {
@@ -19,10 +20,10 @@ class BooksApp extends React.Component {
   }
 
   searchBooks = (searchQuery) => {
-    BooksAPI.search(searchQuery).then((books) => {
-      console.log('searchBooks', books);
+    BooksAPI.search(searchQuery).then((searchedBooks) => {
+      console.log('searchBooks', searchedBooks);
       this.setState(() => ({
-        books,
+        searchedBooks,
       }));
     });
   };
@@ -39,7 +40,7 @@ class BooksApp extends React.Component {
           path='/search'
           render={() => (
             <Search
-              books={this.state.books}
+              searchedBooks={this.state.searchedBooks}
               onSearchBooks={(query) => {
                 this.searchBooks(query);
               }}
