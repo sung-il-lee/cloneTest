@@ -18,6 +18,15 @@ class BooksApp extends React.Component {
     });
   }
 
+  searchBooks = (searchQuery) => {
+    BooksAPI.search(searchQuery).then((books) => {
+      console.log('searchBooks', books);
+      this.setState(() => ({
+        books,
+      }));
+    });
+  };
+
   render() {
     return (
       <div>
@@ -26,7 +35,17 @@ class BooksApp extends React.Component {
           path='/'
           render={() => <ListBooks books={this.state.books} />}
         />
-        <Route path='/search' render={() => <Search />} />
+        <Route
+          path='/search'
+          render={() => (
+            <Search
+              books={this.state.books}
+              onSearchBooks={(query) => {
+                this.searchBooks(query);
+              }}
+            />
+          )}
+        />
       </div>
     );
   }

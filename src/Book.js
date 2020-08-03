@@ -3,18 +3,19 @@ import React, { Component } from 'react';
 class Book extends Component {
   render() {
     const { book } = this.props;
+    const style = {
+      width: 128,
+      height: 193,
+    };
+
+    if (book && book.imageLinks) {
+      style.backgroundImage = `url("${book.imageLinks.thumbnail}")`;
+    }
     return (
       <li>
         <div className='book'>
           <div className='book-top'>
-            <div
-              className='book-cover'
-              style={{
-                width: 128,
-                height: 193,
-                backgroundImage: 'url(' + book.imageLinks.thumbnail + ')',
-              }}
-            />
+            <div className='book-cover' style={style} />
             <div className='book-shelf-changer'>
               <select>
                 <option value='move' disabled>
@@ -28,13 +29,15 @@ class Book extends Component {
             </div>
           </div>
           <div className='book-title'>{book.title}</div>
-          {book.authors.map((author) => {
-            return (
-              <div className='book-authors' key={author}>
-                {author}
-              </div>
-            );
-          })}
+          {book &&
+            book.authors &&
+            book.authors.map((author) => {
+              return (
+                <div className='book-authors' key={author}>
+                  {author}
+                </div>
+              );
+            })}
         </div>
       </li>
     );
