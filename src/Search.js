@@ -1,16 +1,43 @@
 import React, { Component } from 'react';
 import Book from './Book';
 import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
 
 class Search extends Component {
-  onInputChange = (e) => {
-    if (this.props.onSearchBooks) {
-      this.props.onSearchBooks(e.target.value);
+  state = {
+    searchedBooks: [],
+    searchQuery: '',
+  };
+
+  searchBooks = (searchQuery) => {
+    BooksAPI.search(searchQuery).then((searchedBooks) => {
+      this.setState(() => ({
+        searchedBooks,
+      }));
+    });
+  };
+
+  onInputChange = ({ target }) => {
+    if (target) {
+      this.setState(() => ({
+        searchQuery: target.value,
+      }));
+      this.searchBooks(target.value);
     }
   };
+
+  updateBookShelf = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((res) => {
+      BooksAPI.search(this.state.searchQuery).then((searchedBooks) => {
+        this.setState(() => ({
+          searchedBooks,
+        }));
+      });
+    });
+  };
+
   render() {
-    const { searchedBooks } = this.props;
-    console.log(searchedBooks);
+    const { searchedBooks } = this.state;
     return (
       <div className='search-books'>
         <div className='search-books-bar'>
@@ -30,7 +57,13 @@ class Search extends Component {
             {searchedBooks &&
               searchedBooks.length > 0 &&
               searchedBooks.map((book) => {
-                return <Book book={book} key={book.id} />;
+                return (
+                  <Book
+                    book={book}
+                    key={book.id}
+                    onSelectShelf={this.updateBookShelf}
+                  />
+                );
               })}
           </ol>
         </div>

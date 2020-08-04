@@ -1,8 +1,37 @@
 import React, { Component } from 'react';
+import * as BooksAPI from './BooksAPI';
 
 class Book extends Component {
-  render() {
+  state = {
+    book: {},
+  };
+
+  componentDidMount() {
     const { book } = this.props;
+    if (book && book.shelf) {
+      this.setState(() => ({
+        book,
+      }));
+    }
+
+    if (book && !book.shelf) {
+      BooksAPI.get(book.id).then((book) => {
+        this.setState(() => ({
+          book,
+        }));
+      });
+    }
+  }
+
+  handleOnChange = (event) => {
+    this.setState({ shelf: event.target.value });
+    if (this.props.onSelectShelf) {
+      this.props.onSelectShelf(this.state.book, event.target.value);
+    }
+  };
+
+  render() {
+    const { book } = this.state;
     const style = {
       width: 128,
       height: 193,
@@ -17,7 +46,10 @@ class Book extends Component {
           <div className='book-top'>
             <div className='book-cover' style={style} />
             <div className='book-shelf-changer'>
-              <select>
+              <select
+                value={this.state.book.shelf}
+                onChange={this.handleOnChange}
+              >
                 <option value='move' disabled>
                   Move to...
                 </option>

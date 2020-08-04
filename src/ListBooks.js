@@ -1,8 +1,18 @@
 import React, { Component } from 'react';
 import BookShelf from './BookShelf';
 import { Link } from 'react-router-dom';
+import * as BooksAPI from './BooksAPI';
 
 class ListBooks extends Component {
+  state = { bookShelvesMap: {}, books: [] };
+  componentDidMount() {
+    BooksAPI.getAll().then((books) => {
+      const bookShelvesMap = this.mapBooksToShelves(books);
+      this.setState(() => ({
+        bookShelvesMap,
+      }));
+    });
+  }
   mapBooksToShelves(books = []) {
     const bookShelvesMap = {};
     for (const book of books) {
@@ -15,19 +25,19 @@ class ListBooks extends Component {
     return bookShelvesMap;
   }
 
-  extractBookShelfName(shelfValue) {
-    if (shelfValue === 'currentlyReading') {
-      return 'Currently Reading';
-    } else if (shelfValue === 'wantToRead') {
-      return 'Want To Read';
-    } else if (shelfValue === 'read') {
-      return 'Read';
-    }
-  }
+  updateBookShelf = (book, shelf) => {
+    BooksAPI.update(book, shelf).then((res) => {
+      BooksAPI.getAll().then((books) => {
+        const bookShelvesMap = this.mapBooksToShelves(books);
+        this.setState(() => ({
+          bookShelvesMap,
+        }));
+      });
+    });
+  };
 
   render() {
-    const { books } = this.props;
-    const bookShelvesMap = this.mapBooksToShelves(books);
+    const { bookShelvesMap } = this.state;
     return (
       <div>
         <div className='list-books'>
@@ -36,12 +46,12 @@ class ListBooks extends Component {
           </div>
           <div className='list-books-content'>
             {Object.keys(bookShelvesMap).map((key, i) => {
-              const bookShelfName = this.extractBookShelfName(key);
               return (
                 <BookShelf
+                  onSelectShelf={this.updateBookShelf}
                   bookShelfBooks={bookShelvesMap[key]}
-                  bookShelfName={bookShelfName}
-                  key={bookShelfName}
+                  bookShelfNameKey={key}
+                  key={key}
                 />
               );
             })}
