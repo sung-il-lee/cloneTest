@@ -24,9 +24,13 @@ class Book extends Component {
   }
 
   handleOnChange = (event) => {
-    this.setState({ shelf: event.target.value });
+    const newShelfValue = event.target.value;
+    const bookState = this.state.book;
+    bookState.shelf = newShelfValue;
+
+    this.setState(() => ({ book: bookState }));
     if (this.props.onSelectShelf) {
-      this.props.onSelectShelf(this.state.book, event.target.value);
+      this.props.onSelectShelf(this.state.book, newShelfValue);
     }
   };
 
@@ -46,10 +50,7 @@ class Book extends Component {
           <div className='book-top'>
             <div className='book-cover' style={style} />
             <div className='book-shelf-changer'>
-              <select
-                value={this.state.book.shelf}
-                onChange={this.handleOnChange}
-              >
+              <select value={book.shelf} onChange={this.handleOnChange}>
                 <option value='move' disabled>
                   Move to...
                 </option>

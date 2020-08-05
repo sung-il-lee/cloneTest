@@ -27,13 +27,7 @@ class Search extends Component {
   };
 
   updateBookShelf = (book, shelf) => {
-    BooksAPI.update(book, shelf).then((res) => {
-      BooksAPI.search(this.state.searchQuery).then((searchedBooks) => {
-        this.setState(() => ({
-          searchedBooks,
-        }));
-      });
-    });
+    BooksAPI.update(book, shelf).then((res) => {});
   };
 
   render() {
