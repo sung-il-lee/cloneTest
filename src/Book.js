@@ -37,7 +37,7 @@ class Book extends Component {
   render() {
     const { book } = this.state;
     const style = {
-      width: 128,
+      width: 129,
       height: 193,
     };
 
